@@ -1,0 +1,140 @@
+<!-- ANGIE XIMENA OLVERA ALVAREZ -->
+<!-- ACTIVIDAD 16 GUARDAR NOTAS EN EL NAVEGADOR USANDO LOCALSTORAGE-->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas con LocalStorage</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #FF7F30; /* Naranja */
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        #notesList {
+            list-style-type: none;
+            padding: 0;
+        }
+        #notesList li {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        #notesList li:hover {
+            background-color: #e9ecef;
+        }
+        #notesList li button {
+            background-color: #FF4C30; /* Naranja */
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #notesList li button:hover {
+            background-color: #FF1A00; /* Naranja más oscuro */
+        }
+        #addNote {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            border: 1px solid #FF7F30; /* Naranja */
+            border-radius: 5px;
+            color: #FF7F30; /* Naranja */
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #addNote:hover {
+            background-color: #FF7F30; /* Naranja */
+            color: white;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #FF7F30; /* Naranja */
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Notas</h1>
+
+        <input type="text" id="noteInput" placeholder="Escribe una nota..." />
+        <button id="addNote">Agregar Nota</button>
+
+        <ul id="notesList"></ul>
+    </div>
+
+    <script>
+        // Cargar notas desde localStorage al cargar la página
+        document.addEventListener("DOMContentLoaded", function() {
+            loadNotes();
+        });
+        const notesList = document.getElementById('notesList');
+        const noteInput = document.getElementById('noteInput');
+        const addNoteButton = document.getElementById('addNote');
+
+        // Función para cargar notas desde localStorage
+        function loadNotes() {
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            notesList.innerHTML = '';
+            notes.forEach((note, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `${note} <button onclick="deleteNote(${index})">Eliminar</button>`;
+                notesList.appendChild(li);
+            });
+        }
+
+        // Función para agregar una nota
+        addNoteButton.addEventListener('click', () => {
+            const note = noteInput.value.trim();
+            if (note) {
+                const notes = JSON.parse(localStorage.getItem('notes')) || [];
+                notes.push(note);
+                localStorage.setItem('notes', JSON.stringify(notes));
+                noteInput.value = '';
+                loadNotes(); // Actualizar la lista de notas
+            }
+        });
+
+        // Función para eliminar una nota
+        function deleteNote(index) {
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            notes.splice(index, 1);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            loadNotes(); // Actualizar la lista de notas
+        }
+    </script>
+
+</body>
+</html>
